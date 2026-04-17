@@ -41,7 +41,7 @@ export default function CreateCampusPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/campus`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/campus`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
