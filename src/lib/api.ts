@@ -39,39 +39,91 @@ export interface Student {
   id: string;
   userId: string;
   campusDepartmentId: string;
-  rollNumber: string | null;
-  semester: number | null;
+  roll: string;
+  session: string;
+  semester: number;
+  shift: 'MORNING' | 'EVENING';
   user: { id: string; name: string; email: string; role: string };
   campusDepartment: { department: { name: string; shortName: string } };
+}
+
+export type CreditType = 'ONE' | 'TWO' | 'THREE' | 'FOUR';
+export type AssessmentType = 'CLASS_TEST' | 'QUIZ' | 'MIDTERM' | 'ATTENDANCE';
+
+export interface Subject {
+  id: string;
+  campusDepartmentId: string;
+  name: string;
+  code: string;
+  semester: number;
+  maxMarks: number;
+  credit: CreditType;
+  campusDepartment: { department: { name: string; shortName: string } };
+}
+
+export interface Mark {
+  id: string;
+  studentId: string;
+  subjectId: string;
+  assessmentType: AssessmentType;
+  assessmentNo: number;
+  marksObtained: number;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  student: { id: string; roll: string; semester: number; user: { id: string; name: string; email: string } };
+  subject: { id: string; name: string; code: string; semester: number; maxMarks: number };
 }
 
 // ── Departments ────────────────────────────────────────────────────────────
 
 export const departmentApi = {
-  list:            ()                                                    => req('/principal/departments'),
-  listAll:         ()                                                    => req('/departments'),
-  create:          (body: { departmentId: string })                     => req('/principal/departments', 'POST', body),
-  update:          (id: string, body: Partial<{ name: string; shortName: string }>) => req(`/principal/departments/${id}`, 'PATCH', body),
-  remove:          (id: string)                                         => req(`/principal/departments/${id}`, 'DELETE'),
-  setHodNew:       (id: string, body: { name: string; email: string; password: string }) => req(`/principal/departments/${id}/hod`, 'POST', body),
-  setHodExisting:  (id: string, hodId: string)                         => req(`/principal/departments/${id}/hod`, 'PATCH', { hodId }),
-  removeHod:       (id: string)                                         => req(`/principal/departments/${id}/hod`, 'DELETE'),
+  list:           ()                                                    => req('/departments'),
+  listAll:        ()                                                    => req('/departments'),
+  create:         (body: { departmentId: string })                     => req('/departments', 'POST', body),
+  update:         (id: string, body: Partial<{ name: string; shortName: string }>) => req(`/departments/${id}`, 'PATCH', body),
+  remove:         (id: string)                                         => req(`/departments/${id}`, 'DELETE'),
+  setHodNew:      (id: string, body: { name: string; email: string; password: string }) => req(`/departments/${id}/hod`, 'POST', body),
+  setHodExisting: (id: string, hodId: string)                         => req(`/departments/${id}/hod`, 'PATCH', { hodId }),
+  removeHod:      (id: string)                                         => req(`/departments/${id}/hod`, 'DELETE'),
 };
 
 // ── Teachers ───────────────────────────────────────────────────────────────
 
 export const teacherApi = {
-  list:   ()                                                             => req('/principal/teachers'),
-  create: (body: { name: string; email: string; password: string; campusDepartmentId: string; employeeId?: string; designation?: string; qualification?: string }) => req('/principal/teachers', 'POST', body),
-  update: (id: string, body: Partial<{ designation: string; campusDepartmentId: string }>) => req(`/principal/teachers/${id}`, 'PATCH', body),
-  remove: (id: string)                                                   => req(`/principal/teachers/${id}`, 'DELETE'),
+  list:   ()                                                             => req('/teachers'),
+  create: (body: { name: string; email: string; password: string; campusDepartmentId: string; employeeId?: string; designation?: string; qualification?: string }) => req('/teachers', 'POST', body),
+  update: (id: string, body: Partial<{ designation: string; campusDepartmentId: string }>) => req(`/teachers/${id}`, 'PATCH', body),
+  remove: (id: string)                                                   => req(`/teachers/${id}`, 'DELETE'),
 };
 
 // ── Students ───────────────────────────────────────────────────────────────
 
 export const studentApi = {
-  list:   ()                                                             => req('/principal/students'),
-  create: (body: { name: string; email: string; password: string; campusDepartmentId: string; rollNumber?: string; semester?: number }) => req('/principal/students', 'POST', body),
-  update: (id: string, body: Partial<{ rollNumber: string; semester: number; campusDepartmentId: string }>) => req(`/principal/students/${id}`, 'PATCH', body),
-  remove: (id: string)                                                   => req(`/principal/students/${id}`, 'DELETE'),
+  list:          ()                  => req('/students'),
+  listBySemester:(semester: number)  => req(`/students?semester=${semester}`),
+  create:        (body: { name: string; email: string; password: string; campusDepartmentId: string; roll: string; session: string; semester: number; shift?: 'MORNING' | 'EVENING' }) => req('/students', 'POST', body),
+  update:        (id: string, body: Partial<{ roll: string; session: string; semester: number; shift: string; campusDepartmentId: string }>) => req(`/students/${id}`, 'PATCH', body),
+  remove:        (id: string)        => req(`/students/${id}`, 'DELETE'),
+};
+
+// ── Subjects ───────────────────────────────────────────────────────────────
+
+export const subjectApi = {
+  list:          (semester?: number) => req(`/subjects${semester ? `?semester=${semester}` : ''}`),
+  create:        (body: { campusDepartmentId: string; name: string; code: string; semester: number; maxMarks: number; credit: CreditType }) => req('/subjects', 'POST', body),
+  update:        (id: string, body: Partial<{ name: string; code: string; semester: number; maxMarks: number; credit: CreditType }>) => req(`/subjects/${id}`, 'PATCH', body),
+  remove:        (id: string)        => req(`/subjects/${id}`, 'DELETE'),
+};
+
+// ── Marks ──────────────────────────────────────────────────────────────────
+
+export const markApi = {
+  list:       (params?: { subjectId?: string; semester?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.subjectId) qs.set('subjectId', params.subjectId);
+    if (params?.semester)  qs.set('semester', String(params.semester));
+    const q = qs.toString();
+    return req(`/marks${q ? `?${q}` : ''}`);
+  },
+  bulkUpsert: (body: { subjectId: string; assessmentType: AssessmentType; assessmentNo: number; marks: { studentId: string; marksObtained: number }[] }) =>
+    req('/marks/bulk', 'POST', body),
 };

@@ -36,8 +36,10 @@ export default function StudentsPage() {
       email: fd.get('email') as string,
       password: fd.get('password') as string,
       campusDepartmentId: fd.get('campusDepartmentId') as string,
-      rollNumber: (fd.get('rollNumber') as string) || undefined,
-      semester: fd.get('semester') ? Number(fd.get('semester')) : undefined,
+      roll: fd.get('roll') as string,
+      session: fd.get('session') as string,
+      semester: Number(fd.get('semester')),
+      shift: (fd.get('shift') as 'MORNING' | 'EVENING') || 'MORNING',
     });
     if (res.ok) { close(); load(); } else { const d = await res.json(); setError(d.message ?? 'Error'); }
     setBusy(false);
@@ -49,7 +51,8 @@ export default function StudentsPage() {
     const fd = new FormData(e.currentTarget);
     setBusy(true); setError('');
     const res = await studentApi.update(modal.student.id, {
-      rollNumber: (fd.get('rollNumber') as string) || undefined,
+      roll: (fd.get('roll') as string) || undefined,
+      session: (fd.get('session') as string) || undefined,
       semester: fd.get('semester') ? Number(fd.get('semester')) : undefined,
       campusDepartmentId: (fd.get('campusDepartmentId') as string) || undefined,
     });
@@ -104,8 +107,8 @@ export default function StudentsPage() {
                     <p className="text-xs text-gray-400">{s.user.email}</p>
                   </td>
                   <td className="px-5 py-4 text-gray-600">{s.campusDepartment.department.shortName}</td>
-                  <td className="px-5 py-4 text-gray-500">{s.rollNumber ?? '—'}</td>
-                  <td className="px-5 py-4 text-gray-500">{s.semester ?? '—'}</td>
+                  <td className="px-5 py-4 text-gray-500">{s.roll}</td>
+                  <td className="px-5 py-4 text-gray-500">{s.semester}</td>
                   <td className="px-5 py-4">
                     <div className="flex gap-3">
                       <button onClick={() => setModal({ type: 'edit', student: s })} className="text-xs text-gray-500 hover:text-gray-800">Edit</button>
@@ -134,8 +137,13 @@ export default function StudentsPage() {
                     <option value="">Select department</option>
                     {departments.map(d => <option key={d.id} value={d.id}>{d.department.name}</option>)}
                   </select>
-                  <input name="rollNumber" placeholder="Roll number (optional)" className={inputCls} />
-                  <input name="semester" type="number" min={1} max={12} placeholder="Semester (optional)" className={inputCls} />
+                  <input name="roll" placeholder="Roll number" required className={inputCls} />
+                  <input name="session" placeholder="Session (e.g. 2023-24)" required className={inputCls} />
+                  <input name="semester" type="number" min={1} max={12} placeholder="Semester" required className={inputCls} />
+                  <select name="shift" className={`${inputCls} text-gray-700`}>
+                    <option value="MORNING">Morning</option>
+                    <option value="EVENING">Evening</option>
+                  </select>
                   {error && <p className="text-xs text-red-500">{error}</p>}
                   <div className="flex gap-3 pt-1">
                     <button type="submit" disabled={busy} className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold disabled:opacity-50">{busy ? 'Saving…' : 'Create'}</button>
@@ -153,8 +161,9 @@ export default function StudentsPage() {
                   <select name="campusDepartmentId" defaultValue={modal.student.campusDepartmentId} className={`${inputCls} text-gray-700`}>
                     {departments.map(d => <option key={d.id} value={d.id}>{d.department.name}</option>)}
                   </select>
-                  <input name="rollNumber" defaultValue={modal.student.rollNumber ?? ''} placeholder="Roll number" className={inputCls} />
-                  <input name="semester" type="number" min={1} max={12} defaultValue={modal.student.semester ?? ''} placeholder="Semester" className={inputCls} />
+                  <input name="roll" defaultValue={modal.student.roll} placeholder="Roll number" className={inputCls} />
+                  <input name="session" defaultValue={modal.student.session} placeholder="Session" className={inputCls} />
+                  <input name="semester" type="number" min={1} max={12} defaultValue={modal.student.semester} placeholder="Semester" className={inputCls} />
                   {error && <p className="text-xs text-red-500">{error}</p>}
                   <div className="flex gap-3 pt-1">
                     <button type="submit" disabled={busy} className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold disabled:opacity-50">{busy ? 'Saving…' : 'Save'}</button>
