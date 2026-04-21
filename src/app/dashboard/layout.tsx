@@ -16,15 +16,12 @@ const navMap: Record<Role, { href: string; label: string; icon: string }[]> = {
     { href: '/dashboard/departments', label: 'Departments', icon: '🏛' },
     { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
     { href: '/dashboard/students', label: 'Students', icon: '🎓' },
-    { href: '/dashboard/subjects', label: 'Subjects', icon: '📚' },
     { href: '/dashboard/marks', label: 'Results', icon: '📋' },
-    { href: '/dashboard/schedule', label: 'Schedule', icon: '📅' },
   ],
   HOD: [
     { href: '/dashboard', label: 'Overview', icon: '⊞' },
     { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
     { href: '/dashboard/students', label: 'Students', icon: '🎓' },
-    { href: '/dashboard/subjects', label: 'Subjects', icon: '📚' },
     { href: '/dashboard/marks', label: 'Results', icon: '📋' },
   ],
   TEACHER: [
