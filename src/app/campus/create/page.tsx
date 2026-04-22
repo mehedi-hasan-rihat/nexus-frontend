@@ -41,14 +41,16 @@ export default function CreateCampusPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/campus`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/campus/initiate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(form),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Something went wrong');
-      router.push('/login');
+      // redirect to Stripe checkout
+      window.location.href = data.data.checkoutUrl;
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

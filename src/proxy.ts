@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PROTECTED = ['/dashboard'];
+const PROTECTED = ['/dashboard', '/campus/success', '/campus/cancel'];
 const AUTH_ONLY = ['/login', '/signup'];
 const SESSION_COOKIE = 'better-auth.session_token';
 
@@ -24,5 +24,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/campus/:path*', '/login', '/signup'],
+  matcher: ['/dashboard/:path*', '/campus/success', '/campus/cancel', '/login', '/signup'],
 };

@@ -76,33 +76,32 @@ export interface Mark {
 // ── Departments ────────────────────────────────────────────────────────────
 
 export const departmentApi = {
-  list:           ()                                                    => req('/departments'),
-  listAll:        ()                                                    => req('/departments'),
-  create:         (body: { departmentId: string })                     => req('/departments', 'POST', body),
-  update:         (id: string, body: Partial<{ name: string; shortName: string }>) => req(`/departments/${id}`, 'PATCH', body),
-  remove:         (id: string)                                         => req(`/departments/${id}`, 'DELETE'),
-  setHodNew:      (id: string, body: { name: string; email: string; password: string }) => req(`/departments/${id}/hod`, 'POST', body),
-  setHodExisting: (id: string, hodId: string)                         => req(`/departments/${id}/hod`, 'PATCH', { hodId }),
-  removeHod:      (id: string)                                         => req(`/departments/${id}/hod`, 'DELETE'),
+  listGlobal:     ()                                                    => req('/departments'),
+  list:           ()                                                    => req('/principal/departments'),
+  create:         (body: { departmentId: string })                     => req('/principal/departments', 'POST', body),
+  remove:         (id: string)                                         => req(`/principal/departments/${id}`, 'DELETE'),
+  setHodNew:      (id: string, body: { name: string; email: string; password: string }) => req(`/principal/departments/${id}/hod`, 'POST', body),
+  setHodExisting: (id: string, hodId: string)                         => req(`/principal/departments/${id}/hod`, 'PATCH', { hodId }),
+  removeHod:      (id: string)                                         => req(`/principal/departments/${id}/hod`, 'DELETE'),
 };
 
 // ── Teachers ───────────────────────────────────────────────────────────────
 
 export const teacherApi = {
-  list:   ()                                                             => req('/teachers'),
-  create: (body: { name: string; email: string; password: string; campusDepartmentId: string; employeeId?: string; designation?: string; qualification?: string }) => req('/teachers', 'POST', body),
-  update: (id: string, body: Partial<{ designation: string; campusDepartmentId: string }>) => req(`/teachers/${id}`, 'PATCH', body),
-  remove: (id: string)                                                   => req(`/teachers/${id}`, 'DELETE'),
+  list:   ()                                                             => req('/principal/teachers'),
+  create: (body: { name: string; email: string; password: string; campusDepartmentId: string; employeeId?: string; designation?: string; qualification?: string }) => req('/principal/teachers', 'POST', body),
+  update: (id: string, body: Partial<{ designation: string; campusDepartmentId: string }>) => req(`/principal/teachers/${id}`, 'PATCH', body),
+  remove: (id: string)                                                   => req(`/principal/teachers/${id}`, 'DELETE'),
 };
 
 // ── Students ───────────────────────────────────────────────────────────────
 
 export const studentApi = {
-  list:          ()                  => req('/students'),
-  listBySemester:(semester: number)  => req(`/students?semester=${semester}`),
-  create:        (body: { name: string; email: string; password: string; campusDepartmentId: string; roll: string; session: string; semester: number; shift?: 'MORNING' | 'EVENING' }) => req('/students', 'POST', body),
-  update:        (id: string, body: Partial<{ roll: string; session: string; semester: number; shift: string; campusDepartmentId: string }>) => req(`/students/${id}`, 'PATCH', body),
-  remove:        (id: string)        => req(`/students/${id}`, 'DELETE'),
+  list:          ()                  => req('/principal/students'),
+  listBySemester:(semester: number)  => req(`/principal/students?semester=${semester}`),
+  create:        (body: { name: string; email: string; password: string; campusDepartmentId: string; roll: string; session: string; semester: number; shift?: 'MORNING' | 'EVENING' }) => req('/principal/students', 'POST', body),
+  update:        (id: string, body: Partial<{ roll: string; session: string; semester: number; shift: string; campusDepartmentId: string }>) => req(`/principal/students/${id}`, 'PATCH', body),
+  remove:        (id: string)        => req(`/principal/students/${id}`, 'DELETE'),
 };
 
 // ── Subjects ───────────────────────────────────────────────────────────────
