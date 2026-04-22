@@ -35,7 +35,7 @@ export default function DepartmentsPage() {
       setLoading(true);
       const [campusRes, allRes] = await Promise.all([
         departmentApi.list(),
-        departmentApi.listAll(),
+        departmentApi.listGlobal(),
       ]);
       if (campusRes.ok) { const { data } = await campusRes.json(); setCampusDepts(data); }
       if (allRes.ok) { const { data } = await allRes.json(); setAllDepts(data); }
