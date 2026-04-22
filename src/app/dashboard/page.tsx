@@ -49,6 +49,27 @@ function StatCard({ label, value, icon, idx }: { label: string; value: string | 
   );
 }
 
+// ── PENDING PAYMENT view ─────────────────────────────────────────────────────
+function PendingPaymentDashboard({ data }: { data: any }) {
+  const { registration } = data;
+  return (
+    <div className="max-w-lg mx-auto mt-16 text-center">
+      <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span className="text-3xl">⏳</span>
+      </div>
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment pending</h1>
+      <p className="text-gray-500 mb-2">Your campus <span className="font-semibold text-gray-800">{registration?.campusName}</span> will be activated once payment is confirmed.</p>
+      <p className="text-sm text-gray-400 mb-8">If you already paid, please wait a few minutes for the system to process.</p>
+      <a
+        href="/campus/create"
+        className="inline-block border border-[#e2e8f0] hover:border-blue-300 text-gray-700 font-medium px-6 py-3 rounded-xl transition-colors text-sm"
+      >
+        Register a different campus
+      </a>
+    </div>
+  );
+}
+
 // ── PRINCIPAL view ────────────────────────────────────────────────────────────
 function PrincipalDashboard({ data }: { data: any }) {
   const { campus, stats, departmentBreakdown } = data;
@@ -308,7 +329,10 @@ export default function DashboardPage() {
     );
   }
 
-  if (role === 'PRINCIPAL') return <PrincipalDashboard data={data} />;
+  if (role === 'PRINCIPAL') {
+    if (data?.pendingPayment) return <PendingPaymentDashboard data={data} />;
+    return <PrincipalDashboard data={data} />;
+  }
   if (role === 'HOD') return <HODDashboard data={data} />;
   if (role === 'TEACHER') return <TeacherDashboard data={data} />;
   if (role === 'STUDENT') return <StudentDashboard data={data} />;
