@@ -25,6 +25,8 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
+      console.log(data);
+      router.refresh();
       if (!res.ok) throw new Error(data.message || 'Invalid credentials');
       router.push('/dashboard');
     } catch (err: unknown) {
