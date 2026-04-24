@@ -1,18 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { tokenStore } from '@/lib/token';
+import { useRouter } from 'next/navigation';
+
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LoginPage() {
-  const router = useRouter();
+    const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    if (!tokenStore.isAuthenticated()) { setChecking(false); return; }
+    const sessionToken = tokenStore.getSession();
+    const accessToken = tokenStore.getAccess();
+    fetch(`${API}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken ?? ''}`,
+        'X-Access-Token': accessToken ?? '',
+      },
+    })
+      .then((res) => { if (res.ok) window.location.href = '/dashboard'; })
+      .finally(() => setChecking(false));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +53,18 @@ export default function LoginPage() {
     }
   };
 
+  if (checking) {
+    return (
+      <div className="w-full max-w-md flex items-center justify-center py-20">
+        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-md bg-white p-8 border border-[#e2e8f0] rounded-xl shadow-sm">
       <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-0.5 mb-5">
+        <Link href="/" className="inline-flex items-center gap-0.5 mb-5 select-none">
           <span className="text-xl font-black tracking-tight text-gray-900 leading-none">nex</span>
           <span className="text-xl font-black tracking-tight text-blue-600 leading-none">us</span>
           <span className="ml-0.5 mb-2.5 w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />

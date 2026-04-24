@@ -285,7 +285,14 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch(`${API}/api/dashboard`, { credentials: 'include' })
+    const sessionToken = localStorage.getItem('nexus_session_token');
+    const accessToken = localStorage.getItem('nexus_access_token');
+    fetch(`${API}/dashboard`, {
+      headers: {
+        'Authorization': `Bearer ${sessionToken ?? ''}`,
+        'X-Access-Token': accessToken ?? '',
+      },
+    })
       .then((r) => r.json())
       .then(({ data, message }) => {
         if (data) setData(data);
