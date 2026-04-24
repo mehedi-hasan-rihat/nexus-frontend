@@ -51,7 +51,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [user, setUser] = useState<UserCtx | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, { credentials: 'include' })
+    const sessionToken = typeof window !== 'undefined' ? localStorage.getItem('nexus_session_token') : null;
+    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('nexus_access_token') : null;
+    if (!sessionToken) { router.replace('/login'); return; }
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`,
+        'X-Access-Token': accessToken ?? '',
+      },
+    })
       .then((r) => r.json())
       .then(({ data }) => {
         if (data?.role) setUser({ name: data.name ?? '', role: data.role as Role });
@@ -61,7 +70,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router]);
 
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+    const sessionToken = localStorage.getItem('nexus_session_token');
+    const accessToken = localStorage.getItem('nexus_access_token');
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${sessionToken ?? ''}`,
+        'X-Access-Token': accessToken ?? '',
+      },
+    });
+    localStorage.removeItem('nexus_session_token');
+    localStorage.removeItem('nexus_access_token');
+    document.cookie = 'nexus_auth=; path=/; max-age=0';
     window.location.href = '/login';
   };
 

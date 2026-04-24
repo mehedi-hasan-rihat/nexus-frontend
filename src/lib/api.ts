@@ -1,12 +1,21 @@
+import { tokenStore } from './token';
+
 const BASE = `${process.env.NEXT_PUBLIC_API_URL}/api`;
 
-const req = (url: string, method = 'GET', body?: unknown): Promise<Response> =>
-  fetch(`${BASE}${url}`, {
+const req = (url: string, method = 'GET', body?: unknown): Promise<Response> => {
+  const sessionToken = tokenStore.getSession();
+  const accessToken = tokenStore.getAccess();
+
+  return fetch(`${BASE}${url}`, {
     method,
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(sessionToken && { 'Authorization': `Bearer ${sessionToken}` }),
+      ...(accessToken && { 'X-Access-Token': accessToken }),
+    },
     ...(body !== undefined && { body: JSON.stringify(body) }),
   });
+};
 
 // ── Types ──────────────────────────────────────────────────────────────────
 

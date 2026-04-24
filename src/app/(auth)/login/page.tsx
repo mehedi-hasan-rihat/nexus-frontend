@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { tokenStore } from '@/lib/token';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,13 +22,11 @@ export default function LoginPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      console.log(data);
-      router.refresh();
       if (!res.ok) throw new Error(data.message || 'Invalid credentials');
+      tokenStore.set(data.data.sessionToken, data.data.accessToken);
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

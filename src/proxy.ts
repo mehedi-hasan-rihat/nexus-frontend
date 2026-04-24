@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const PROTECTED = ['/dashboard', '/campus/success', '/campus/cancel'];
 const AUTH_ONLY = ['/login', '/signup'];
-const SESSION_COOKIE = 'better-auth.session_token';
+const AUTH_COOKIE = 'nexus_auth';
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -12,7 +12,7 @@ export function proxy(req: NextRequest) {
 
   if (!isProtected && !isAuthOnly) return NextResponse.next();
 
-  const authenticated = !!req.cookies.get(SESSION_COOKIE)?.value;
+  const authenticated = !!req.cookies.get(AUTH_COOKIE)?.value;
 
   if (isProtected && !authenticated)
     return NextResponse.redirect(new URL('/login', req.url));
