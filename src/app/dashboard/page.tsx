@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUser } from './layout';
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL + '/api';
 
 // ── Skeleton helpers ──────────────────────────────────────────────────────────
 function StatSkeleton() {

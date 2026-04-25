@@ -44,7 +44,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Invalid credentials');
-      tokenStore.set(data.data.sessionToken, data.data.accessToken);
+      tokenStore.set({ sessionToken: data.data.sessionToken, accessToken: data.data.accessToken });
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

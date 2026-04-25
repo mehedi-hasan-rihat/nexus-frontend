@@ -1,12 +1,11 @@
 const SESSION_KEY = 'nexus_session_token';
 const ACCESS_KEY = 'nexus_access_token';
-const AUTH_COOKIE = 'nexus_auth'; // JS-accessible cookie for middleware
+const AUTH_COOKIE = 'nexus_auth';
 
 export const tokenStore = {
-    set(sessionToken: string, accessToken: string) {
+    set({ sessionToken, accessToken }: { sessionToken: string; accessToken: string }) {
         localStorage.setItem(SESSION_KEY, sessionToken);
         localStorage.setItem(ACCESS_KEY, accessToken);
-        // set a JS-accessible cookie so Next.js middleware can check auth
         document.cookie = `${AUTH_COOKIE}=1; path=/; max-age=${60 * 60 * 24}`;
     },
 
