@@ -12,33 +12,33 @@ export const useUser = () => useContext(UserContext);
 
 const navMap: Record<Role, { href: string; label: string; icon: string }[]> = {
   PRINCIPAL: [
-    { href: '/dashboard', label: 'Overview', icon: '⊞' },
-    { href: '/dashboard/departments', label: 'Departments', icon: '🏛' },
-    { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
-    { href: '/dashboard/students', label: 'Students', icon: '🎓' },
-    { href: '/dashboard/marks', label: 'Results', icon: '📋' },
+    { href: '/dashboard',             label: 'Overview',     icon: '⊞' },
+    { href: '/dashboard/departments', label: 'Departments',  icon: '🏛' },
+    { href: '/dashboard/teachers',    label: 'Teachers',     icon: '👨' },
+    { href: '/dashboard/students',    label: 'Students',     icon: '🎓' },
+    { href: '/dashboard/marks',       label: 'Results',      icon: '📋' },
   ],
   HOD: [
-    { href: '/dashboard', label: 'Overview', icon: '⊞' },
-    { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
-    { href: '/dashboard/students', label: 'Students', icon: '🎓' },
-    { href: '/dashboard/marks', label: 'Results', icon: '📋' },
+    { href: '/dashboard',             label: 'Overview',     icon: '⊞' },
+    { href: '/dashboard/teachers',    label: 'Teachers',     icon: '👨' },
+    { href: '/dashboard/students',    label: 'Students',     icon: '🎓' },
+    { href: '/dashboard/marks',       label: 'Results',      icon: '📋' },
   ],
   TEACHER: [
-    { href: '/dashboard', label: 'Overview', icon: '⊞' },
-    { href: '/dashboard/marks', label: 'Marks', icon: '📋' },
+    { href: '/dashboard',             label: 'Overview',     icon: '⊞' },
+    { href: '/dashboard/marks',       label: 'Marks',        icon: '📋' },
   ],
   STUDENT: [
-    { href: '/dashboard', label: 'Overview', icon: '⊞' },
-    { href: '/dashboard/marks', label: 'My Results', icon: '📋' },
+    { href: '/dashboard',             label: 'Overview',     icon: '⊞' },
+    { href: '/dashboard/marks',       label: 'My Results',   icon: '📋' },
   ],
 };
 
 function SidebarSkeleton() {
   return (
-    <div className="flex-1 py-4 px-2 space-y-1 animate-pulse">
+    <div className="flex-1 py-4 px-3 space-y-1 animate-pulse">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="h-10 bg-gray-100 rounded-lg mx-1" />
+        <div key={i} className="h-12 bg-[#E8DEF8]/40 rounded-full mx-1" />
       ))}
     </div>
   );
@@ -52,16 +52,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     const sessionToken = typeof window !== 'undefined' ? localStorage.getItem('nexus_session_token') : null;
-    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('nexus_access_token') : null;
+    const accessToken  = typeof window !== 'undefined' ? localStorage.getItem('nexus_access_token')  : null;
     if (!sessionToken) { router.replace('/login'); return; }
-
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
-      headers: {
-        'Authorization': `Bearer ${sessionToken}`,
-        'X-Access-Token': accessToken ?? '',
-      },
+      headers: { Authorization: `Bearer ${sessionToken}`, 'X-Access-Token': accessToken ?? '' },
     })
-      .then((r) => r.json())
+      .then(r => r.json())
       .then(({ data }) => {
         if (data?.role) setUser({ name: data.name ?? '', role: data.role as Role });
         else router.replace('/login');
@@ -71,13 +67,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = async () => {
     const sessionToken = localStorage.getItem('nexus_session_token');
-    const accessToken = localStorage.getItem('nexus_access_token');
+    const accessToken  = localStorage.getItem('nexus_access_token');
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${sessionToken ?? ''}`,
-        'X-Access-Token': accessToken ?? '',
-      },
+      headers: { Authorization: `Bearer ${sessionToken ?? ''}`, 'X-Access-Token': accessToken ?? '' },
     });
     localStorage.removeItem('nexus_session_token');
     localStorage.removeItem('nexus_access_token');
@@ -90,48 +83,71 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <UserContext.Provider value={user ?? { name: '', role: 'PRINCIPAL' }}>
-      <div className="flex h-screen bg-[#f8fafc] overflow-hidden">
+      <div className="flex h-screen overflow-hidden" style={{ background: 'var(--md-background)' }}>
 
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'w-60' : 'w-16'} flex-shrink-0 bg-white border-r border-[#e2e8f0] flex flex-col transition-all duration-200`}>
-          <div className="h-16 flex items-center px-4 border-b border-[#e2e8f0] gap-2 flex-shrink-0">
+        {/* ── Sidebar ── */}
+        <aside
+          className="flex-shrink-0 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] relative"
+          style={{
+            width: sidebarOpen ? '256px' : '80px',
+            background: 'var(--md-surface-container)',
+          }}
+        >
+          {/* Decorative blur shape */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-10 -right-10 w-40 h-40 rounded-full blur-3xl pointer-events-none"
+            style={{ background: 'var(--md-primary)', opacity: 0.08 }}
+          />
+
+          {/* Logo */}
+          <div className="h-16 flex items-center px-5 flex-shrink-0 gap-2">
             <Link href="/" className="flex items-center gap-0.5 select-none">
-              <span className="text-lg font-black tracking-tight text-gray-900 leading-none">nex</span>
-              <span className="text-lg font-black tracking-tight text-blue-600 leading-none">us</span>
-              <span className="ml-0.5 mb-2 w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />
+              <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--md-on-background)' }}>nex</span>
+              <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--md-primary)' }}>us</span>
+              <span className="ml-0.5 mb-2 w-1.5 h-1.5 rounded-full inline-block" style={{ background: 'var(--md-primary)' }} />
             </Link>
             {sidebarOpen && (
-              <span className="ml-auto text-xs font-medium text-gray-400 capitalize">
+              <span className="ml-auto text-xs font-medium capitalize px-2.5 py-1 rounded-full" style={{ background: 'var(--md-secondary-container)', color: 'var(--md-on-secondary)' }}>
                 {role.toLowerCase()}
               </span>
             )}
           </div>
 
+          {/* Nav */}
           {!user ? <SidebarSkeleton /> : (
-            <nav className="flex-1 py-4 px-2 space-y-0.5 overflow-y-auto">
+            <nav className="flex-1 py-2 px-3 space-y-0.5 overflow-y-auto">
               {navItems.map((item) => {
                 const active = pathname === item.href;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                      active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
+                    className="flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] active:scale-95"
+                    style={{
+                      background: active ? 'var(--md-secondary-container)' : 'transparent',
+                      color: active ? 'var(--md-primary)' : 'var(--md-on-surface-variant)',
+                    }}
+                    onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'var(--md-primary)1A'; }}
+                    onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
                   >
                     <span className="text-base w-5 text-center flex-shrink-0">{item.icon}</span>
-                    {sidebarOpen && <span>{item.label}</span>}
-                    {active && sidebarOpen && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-600" />}
+                    {sidebarOpen && <span className="truncate">{item.label}</span>}
+                    {active && sidebarOpen && (
+                      <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--md-primary)' }} />
+                    )}
                   </Link>
                 );
               })}
             </nav>
           )}
 
-          <div className="p-3 border-t border-[#e2e8f0] flex-shrink-0">
+          {/* Sign out */}
+          <div className="p-3 flex-shrink-0">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all duration-200 active:scale-95 hover:bg-[#B3261E]/10"
+              style={{ color: 'var(--md-on-surface-variant)' }}
             >
               <span className="text-base w-5 text-center flex-shrink-0">↩</span>
               {sidebarOpen && <span>Sign out</span>}
@@ -139,31 +155,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </aside>
 
-        {/* Main */}
+        {/* ── Main ── */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <header className="h-16 bg-white border-b border-[#e2e8f0] flex items-center px-6 gap-4 flex-shrink-0">
+
+          {/* Header */}
+          <header
+            className="h-16 flex items-center px-6 gap-4 flex-shrink-0 border-b backdrop-blur-sm"
+            style={{ background: 'var(--md-background)/95', borderColor: 'var(--md-surface-low)' }}
+          >
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 transition-colors text-lg"
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 active:scale-95 hover:bg-[#6750A4]/10 text-lg"
+              style={{ color: 'var(--md-on-surface-variant)' }}
+              aria-label="Toggle sidebar"
             >
               ☰
             </button>
+
             <div className="flex-1" />
+
             {!user ? (
               <div className="flex items-center gap-3 animate-pulse">
                 <div className="hidden sm:block space-y-1.5">
-                  <div className="h-3 w-24 bg-gray-100 rounded" />
-                  <div className="h-2.5 w-16 bg-gray-100 rounded" />
+                  <div className="h-3 w-24 rounded-full" style={{ background: 'var(--md-surface-low)' }} />
+                  <div className="h-2.5 w-16 rounded-full" style={{ background: 'var(--md-surface-low)' }} />
                 </div>
-                <div className="w-9 h-9 rounded-full bg-gray-100" />
+                <div className="w-10 h-10 rounded-full" style={{ background: 'var(--md-surface-low)' }} />
               </div>
             ) : (
               <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium text-gray-800">{user.name}</p>
-                  <p className="text-xs text-gray-400 capitalize">{user.role.toLowerCase()}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--md-on-background)' }}>{user.name}</p>
+                  <p className="text-xs capitalize" style={{ color: 'var(--md-on-surface-variant)' }}>{user.role.toLowerCase()}</p>
                 </div>
-                <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold"
+                  style={{ background: 'var(--md-primary)' }}
+                >
                   {user.name?.[0]?.toUpperCase() ?? 'U'}
                 </div>
               </div>
