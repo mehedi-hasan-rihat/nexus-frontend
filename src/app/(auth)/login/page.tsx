@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LoginPage() {
-    const router = useRouter();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,21 +56,27 @@ export default function LoginPage() {
   if (checking) {
     return (
       <div className="w-full max-w-md flex items-center justify-center py-20">
-        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-12 h-12 border-4 border-[#1447E6] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-md bg-white p-8 border border-[#e2e8f0] rounded-xl shadow-sm">
+    <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-sm p-8">
+      {/* Wordmark */}
       <div className="text-center mb-8">
         <Link href="/" className="inline-flex items-center gap-0.5 mb-5 select-none">
-          <span className="text-xl font-black tracking-tight text-gray-900 leading-none">nex</span>
-          <span className="text-xl font-black tracking-tight text-blue-600 leading-none">us</span>
-          <span className="ml-0.5 mb-2.5 w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />
+          <span className="text-xl font-black tracking-tight text-[--foreground] leading-none">nex</span>
+          <span
+            className="text-xl font-black tracking-tight leading-none bg-clip-text text-transparent"
+            style={{ backgroundImage: 'linear-gradient(135deg, #0052FF, #4D7CFF)' }}
+          >
+            us
+          </span>
+          <span className="ml-0.5 mb-2.5 w-1.5 h-1.5 rounded-full inline-block" style={{ background: 'var(--accent)' }} />
         </Link>
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">Welcome back</h1>
-        <p className="text-sm text-gray-500">Sign in to your Nexus account</p>
+        <h1 className="text-2xl font-semibold text-[--foreground] mb-1">Welcome back</h1>
+        <p className="text-sm text-[--muted-foreground]">Sign in to your Nexus account</p>
       </div>
 
       {error && (
@@ -81,7 +87,7 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
+          <label className="block text-sm font-medium text-[--foreground] mb-1.5">Email address</label>
           <Input
             type="email"
             placeholder="Enter your email"
@@ -93,8 +99,8 @@ export default function LoginPage() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot password?</Link>
+            <label className="block text-sm font-medium text-[--foreground]">Password</label>
+            <Link href="/forgot-password" className="text-sm text-[--accent] hover:underline">Forgot password?</Link>
           </div>
           <Input
             type="password"
@@ -105,15 +111,10 @@ export default function LoginPage() {
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" variant="primary" className="w-full" disabled={loading}>
           {loading ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
-
-      <p className="mt-6 text-center text-sm text-gray-500">
-        Don&apos;t have an account?{' '}
-        <Link href="/signup" className="text-blue-600 hover:underline font-medium">Create one</Link>
-      </p>
     </div>
   );
 }

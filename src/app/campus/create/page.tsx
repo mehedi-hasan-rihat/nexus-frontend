@@ -49,7 +49,6 @@ export default function CreateCampusPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Something went wrong');
-      // redirect to Stripe checkout
       window.location.href = data.data.checkoutUrl;
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -59,21 +58,25 @@ export default function CreateCampusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[--muted] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">N</span>
-            </div>
-            <span className="font-semibold text-gray-900 text-lg">Nexus</span>
+          <Link href="/" className="inline-flex items-center gap-0.5 mb-6 select-none">
+            <span className="text-xl font-black tracking-tight text-[--foreground] leading-none">nex</span>
+            <span
+              className="text-xl font-black tracking-tight leading-none bg-clip-text text-transparent"
+              style={{ backgroundImage: 'linear-gradient(135deg, #0052FF, #4D7CFF)' }}
+            >
+              us
+            </span>
+            <span className="ml-0.5 mb-2.5 w-1.5 h-1.5 rounded-full inline-block" style={{ background: 'var(--accent)' }} />
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Set up your campus</h1>
-          <p className="text-sm text-gray-500">Create your campus and assign a principal to get started.</p>
+          <h1 className="text-2xl font-bold text-[--foreground] mb-1">Set up your campus</h1>
+          <p className="text-sm text-[--muted-foreground]">Create your campus and assign a principal to get started.</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-sm p-8">
+        <div className="bg-[--card] rounded-2xl border border-[--border] shadow-sm p-8">
           {error && (
             <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
               {error}
@@ -83,10 +86,12 @@ export default function CreateCampusPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Campus Info */}
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Campus Details</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[--muted-foreground] mb-4">Campus Details</p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Campus name <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-[--foreground] mb-1.5">
+                    Campus name <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     placeholder="e.g. Greenwood Academy"
                     value={form.campusName}
@@ -96,7 +101,9 @@ export default function CreateCampusPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Campus code <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-[--foreground] mb-1.5">
+                      Campus code <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       placeholder="e.g. GWA-01"
                       value={form.campusCode}
@@ -105,7 +112,7 @@ export default function CreateCampusPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Address</label>
+                    <label className="block text-sm font-medium text-[--foreground] mb-1.5">Address</label>
                     <Input
                       placeholder="123 School St."
                       value={form.address}
@@ -116,14 +123,16 @@ export default function CreateCampusPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#e2e8f0]" />
+            <div className="border-t border-[--border]" />
 
             {/* Principal Info */}
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Principal Account</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[--muted-foreground] mb-4">Principal Account</p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Full name <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-[--foreground] mb-1.5">
+                    Full name <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     placeholder="Principal's full name"
                     value={form.principal.name}
@@ -132,7 +141,9 @@ export default function CreateCampusPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-[--foreground] mb-1.5">
+                    Email address <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="email"
                     placeholder="principal@school.com"
@@ -142,7 +153,9 @@ export default function CreateCampusPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Password <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-[--foreground] mb-1.5">
+                    Password <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="password"
                     placeholder="Create a secure password"
@@ -154,15 +167,15 @@ export default function CreateCampusPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full py-3" disabled={loading}>
+            <Button type="submit" variant="primary" className="w-full" disabled={loading}>
               {loading ? 'Creating campus…' : 'Create campus →'}
             </Button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="text-center text-sm text-[--muted-foreground] mt-6">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline font-medium">Sign in</Link>
+          <Link href="/login" className="text-[--accent] hover:underline font-medium">Sign in</Link>
         </p>
       </div>
     </div>

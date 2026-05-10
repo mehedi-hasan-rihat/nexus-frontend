@@ -86,7 +86,7 @@ export default function StudentsPage() {
       <div className="bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden">
         {loading ? (
           <div className="p-8 flex justify-center">
-            <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-[#1447E6] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : students.length === 0 ? (
           <div className="p-12 text-center text-sm text-gray-400">No students yet.</div>

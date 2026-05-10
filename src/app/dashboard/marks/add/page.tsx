@@ -7,6 +7,9 @@ import { studentApi, subjectApi, markApi, type Student, type Subject, type Asses
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 const ASSESSMENT_TYPES: AssessmentType[] = ['CLASS_TEST', 'QUIZ', 'MIDTERM', 'ATTENDANCE'];
 
+// Assessment types that need numbering (1, 2, 3...)
+const NUMBERED_TYPES: AssessmentType[] = ['CLASS_TEST', 'QUIZ'];
+
 const inputCls = 'w-full px-3 py-2.5 text-sm border border-[#e2e8f0] rounded-lg outline-none focus:ring-2 focus:ring-blue-500';
 const selectCls = `${inputCls} text-gray-700`;
 
@@ -74,24 +77,41 @@ export default function AddMarksPage() {
 
           {semester && (
             <>
-              <select value={subjectId} onChange={e => setSubjectId(e.target.value)} required className={selectCls}>
-                <option value="">Select subject *</option>
-                {subjects.map(s => (
-                  <option key={s.id} value={s.id}>{s.name} ({s.code}) — Max {s.maxMarks}</option>
-                ))}
-              </select>
+              {loading ? (
+                <>
+                  {/* Subject skeleton */}
+                  <div className="w-full h-[42px] bg-gray-100 rounded-lg animate-pulse" />
+                  
+                  {/* Assessment type and number skeleton */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="w-full h-[42px] bg-gray-100 rounded-lg animate-pulse" />
+                    <div className="w-full h-[42px] bg-gray-100 rounded-lg animate-pulse" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <select value={subjectId} onChange={e => setSubjectId(e.target.value)} required className={selectCls}>
+                    <option value="">Select subject *</option>
+                    {subjects.map(s => (
+                      <option key={s.id} value={s.id}>{s.name} ({s.code}) — Max {s.maxMarks}</option>
+                    ))}
+                  </select>
 
-              <div className="grid grid-cols-2 gap-3">
-                <select value={assessmentType} onChange={e => setAssessmentType(e.target.value as AssessmentType)} className={selectCls}>
-                  {ASSESSMENT_TYPES.map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
-                </select>
-                <input
-                  type="number" min={1} value={assessmentNo}
-                  onChange={e => setAssessmentNo(e.target.value)}
-                  placeholder="Assessment No."
-                  required className={inputCls}
-                />
-              </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <select value={assessmentType} onChange={e => setAssessmentType(e.target.value as AssessmentType)} className={selectCls}>
+                      {ASSESSMENT_TYPES.map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
+                    </select>
+                    {NUMBERED_TYPES.includes(assessmentType) && (
+                      <input
+                        type="number" min={1} value={assessmentNo}
+                        onChange={e => setAssessmentNo(e.target.value)}
+                        placeholder="Assessment No."
+                        required className={inputCls}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
@@ -101,7 +121,7 @@ export default function AddMarksPage() {
           <div className="bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden">
             {loading ? (
               <div className="p-8 flex justify-center">
-                <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-[#1447E6] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : students.length === 0 ? (
               <div className="p-8 text-center text-sm text-gray-400">No students found for semester {semester}.</div>
