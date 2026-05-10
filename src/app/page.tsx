@@ -2,417 +2,482 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Marquee from 'react-fast-marquee';
+import { Button } from '@/components/ui/Button';
 
+// ── Data ─────────────────────────────────────────────────────────────────────
 const testimonials = [
   {
     name: 'Md. Rafiqul Islam',
     role: 'Principal, Dhaka Polytechnic Institute',
-    avatar: 'RI',
-    text: 'Nexus completely transformed how we manage our institute. Attendance, results, and communication — all in one place. Our staff productivity increased by 40%.',
+    text: 'NEXUS COMPLETELY TRANSFORMED HOW WE MANAGE OUR INSTITUTE. ATTENDANCE, RESULTS, AND COMMUNICATION — ALL IN ONE PLACE.',
   },
   {
     name: 'Engr. Kamal Hossain',
     role: 'Principal, Chittagong Polytechnic Institute',
-    avatar: 'KH',
-    text: 'BTEB-aligned reporting and semester management is now effortless. Nexus reduced our administrative workload by 60% within the first month.',
-  },
-  {
-    name: 'Md. Shafiqul Alam',
-    role: 'Vice Principal, Rajshahi Polytechnic Institute',
-    avatar: 'SA',
-    text: 'Class routines and exam schedules across all technology departments — Civil, Electrical, Computer — are now managed in one click. Remarkable platform.',
+    text: 'BTEB-ALIGNED REPORTING AND SEMESTER MANAGEMENT IS NOW EFFORTLESS. NEXUS REDUCED OUR ADMINISTRATIVE WORKLOAD BY 60%.',
   },
   {
     name: 'Engr. Nasrin Akter',
     role: 'Head of Department, Khulna Polytechnic Institute',
-    avatar: 'NA',
-    text: 'Industrial training tracking and student portfolio management is seamless. Nexus is genuinely built for the polytechnic system in Bangladesh.',
+    text: 'INDUSTRIAL TRAINING TRACKING AND STUDENT PORTFOLIO MANAGEMENT IS SEAMLESS. NEXUS IS GENUINELY BUILT FOR THE POLYTECHNIC SYSTEM.',
   },
 ];
 
 const features = [
   {
-    icon: '🏛️',
-    title: 'Multi-Institute Management',
+    title: 'MULTI-INSTITUTE MANAGEMENT',
     desc: 'Manage all polytechnic campuses under one dashboard with role-based access for each principal and department head.',
   },
   {
-    icon: '📋',
-    title: 'BTEB-Aligned Results',
+    title: 'BTEB-ALIGNED RESULTS',
     desc: 'Semester-wise result processing, grade sheets, and transcript generation fully aligned with BTEB standards.',
   },
   {
-    icon: '🔧',
-    title: 'Department & Trade Management',
+    title: 'DEPARTMENT & TRADE MANAGEMENT',
     desc: 'Manage Civil, Electrical, Mechanical, Computer, and all other technology departments with dedicated workflows.',
   },
   {
-    icon: '🏭',
-    title: 'Industrial Training Tracking',
+    title: 'INDUSTRIAL TRAINING TRACKING',
     desc: 'Monitor student industrial attachments, supervisor feedback, and completion status in real time.',
   },
   {
-    icon: '📅',
-    title: 'Smart Class Scheduling',
+    title: 'SMART CLASS SCHEDULING',
     desc: 'Auto-generate conflict-free class routines and lab schedules across all semesters and shifts.',
   },
   {
-    icon: '💳',
-    title: 'Fee & Stipend Management',
+    title: 'FEE & STIPEND MANAGEMENT',
     desc: 'Automate tuition fee collection, government stipend tracking, and overdue payment reminders.',
   },
 ];
 
 const plans = [
   {
-    name: 'Basic',
+    name: 'BASIC',
     price: '৳2,499',
-    period: '/month',
-    desc: 'Ideal for a single polytechnic institute.',
-    features: ['Up to 500 students', '1 institute campus', 'Attendance & results', 'BTEB grade sheet export', 'Email support'],
-    cta: 'Get started',
-    highlight: false,
+    period: '/MONTH',
+    features: [
+      'UP TO 500 STUDENTS',
+      '1 INSTITUTE CAMPUS',
+      'ATTENDANCE & RESULTS',
+      'BTEB GRADE SHEET EXPORT',
+      'EMAIL SUPPORT',
+    ],
   },
   {
-    name: 'Standard',
+    name: 'STANDARD',
     price: '৳5,999',
-    period: '/month',
-    desc: 'For polytechnic institutes with multiple departments & shifts.',
-    features: ['Up to 2,000 students', '3 campuses', 'All Basic features', 'Industrial training tracking', 'Fee & stipend management', 'Priority support'],
-    cta: 'Get started',
+    period: '/MONTH',
+    features: [
+      'UP TO 2,000 STUDENTS',
+      '3 CAMPUSES',
+      'ALL BASIC FEATURES',
+      'INDUSTRIAL TRAINING TRACKING',
+      'FEE & STIPEND MANAGEMENT',
+      'PRIORITY SUPPORT',
+    ],
     highlight: true,
   },
   {
-    name: 'Institute Network',
-    price: 'Custom',
+    name: 'INSTITUTE NETWORK',
+    price: 'CUSTOM',
     period: '',
-    desc: 'For polytechnic institute groups & BTEB-affiliated networks.',
-    features: ['Unlimited students', 'Unlimited campuses', 'All Standard features', 'Dedicated account manager', 'Custom BTEB integrations', 'SLA guarantee'],
-    cta: 'Contact us',
-    highlight: false,
+    features: [
+      'UNLIMITED STUDENTS',
+      'UNLIMITED CAMPUSES',
+      'ALL STANDARD FEATURES',
+      'DEDICATED ACCOUNT MANAGER',
+      'CUSTOM BTEB INTEGRATIONS',
+      'SLA GUARANTEE',
+    ],
   },
 ];
 
-function TestimonialSlider() {
-  const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
+const steps = [
+  {
+    number: '01',
+    title: 'REGISTER YOUR CAMPUS',
+    desc: 'Create your institute profile, set your campus code, and assign a principal account in under 5 minutes.',
+  },
+  {
+    number: '02',
+    title: 'ADD DEPARTMENTS & STAFF',
+    desc: 'Onboard your technology departments — Civil, Electrical, Computer, Mechanical — and invite teachers and HODs.',
+  },
+  {
+    number: '03',
+    title: 'ENROL STUDENTS',
+    desc: 'Import or manually add students by semester, session, and shift. Roll numbers and BTEB IDs are tracked automatically.',
+  },
+  {
+    number: '04',
+    title: 'RUN YOUR INSTITUTE',
+    desc: 'Submit marks, generate BTEB-aligned grade sheets, track industrial training, and manage fees — all from one dashboard.',
+  },
+];
 
-  const go = useCallback((index: number) => {
-    if (animating) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setCurrent(index);
-      setAnimating(false);
-    }, 300);
-  }, [animating]);
+// ── Page ─────────────────────────────────────────────────────────────────────
+export default function HomePage() {
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      go((current + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [current, go]);
-
-  const t = testimonials[current];
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className="relative max-w-2xl mx-auto">
-      <div
-        className="bg-white rounded-2xl p-8 border border-[#e2e8f0] shadow-sm transition-all duration-300"
-        style={{ opacity: animating ? 0 : 1, transform: animating ? 'translateY(8px)' : 'translateY(0)' }}
-      >
-        <div className="flex gap-1 mb-5">
-          {[...Array(5)].map((_, i) => (
-            <span key={i} className="text-yellow-400 text-lg">★</span>
-          ))}
-        </div>
-        <p className="text-gray-700 text-lg leading-relaxed mb-6">&ldquo;{t.text}&rdquo;</p>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
-            {t.avatar}
-          </div>
-          <div>
-            <p className="font-semibold text-gray-800 text-sm">{t.name}</p>
-            <p className="text-gray-500 text-xs">{t.role}</p>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[--background] text-[--foreground] overflow-x-hidden">
 
-      {/* Dots */}
-      <div className="flex justify-center gap-2 mt-6">
-        {testimonials.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => go(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${i === current ? 'w-6 bg-blue-600' : 'w-2 bg-gray-300'}`}
-          />
-        ))}
-      </div>
-
-      {/* Arrows */}
-      <button
-        onClick={() => go((current - 1 + testimonials.length) % testimonials.length)}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 w-9 h-9 rounded-full border border-[#e2e8f0] bg-white flex items-center justify-center text-gray-500 hover:border-blue-600 hover:text-blue-600 transition-colors"
-      >
-        ‹
-      </button>
-      <button
-        onClick={() => go((current + 1) % testimonials.length)}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 w-9 h-9 rounded-full border border-[#e2e8f0] bg-white flex items-center justify-center text-gray-500 hover:border-blue-600 hover:text-blue-600 transition-colors"
-      >
-        ›
-      </button>
-    </div>
-  );
-}
-
-export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-white font-sans">
-
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-        <div className="max-w-6xl mx-auto px-6 h-[66px] flex items-center justify-between">
-
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-0.5 select-none">
-            <span className="text-[22px] font-black tracking-tight text-gray-900 leading-none">nex</span>
-            <span className="text-[22px] font-black tracking-tight text-blue-600 leading-none">us</span>
-            <span className="ml-0.5 mb-3 w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 bg-[--background] border-b-2 border-[--border]">
+        <div className="max-w-[95vw] mx-auto px-8 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-[--accent] flex items-center justify-center">
+              <span className="text-2xl font-bold text-[--accent-foreground]">N</span>
+            </div>
+            <span className="text-2xl font-bold uppercase tracking-tighter">NEXUS</span>
           </Link>
 
-          {/* Nav links — pill group */}
-          <div className="hidden md:flex items-center bg-black/[0.04] backdrop-blur-sm border border-black/[0.06] rounded-full px-1 py-1 gap-0.5">
-            {[['#features', 'Features'], ['#testimonials', 'Testimonials'], ['#pricing', 'Pricing']].map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                className="relative px-4 py-1.5 text-sm font-medium text-gray-500 rounded-full transition-all duration-200 hover:text-gray-900 hover:bg-white hover:shadow-[0_1px_4px_rgba(0,0,0,0.10)] active:scale-95"
+          <nav className="hidden md:flex items-center gap-8">
+            {['FEATURES', 'HOW IT WORKS', 'TESTIMONIALS', 'PRICING'].map((item) => (
+              <Link
+                key={item}
+                href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-sm font-bold uppercase tracking-wide text-[--muted-foreground] hover:text-[--accent] transition-colors duration-200"
               >
-                {label}
-              </a>
+                {item}
+              </Link>
             ))}
-          </div>
+          </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="hidden sm:block text-sm font-medium text-gray-600 hover:text-gray-900 px-3 py-2 rounded-full hover:bg-black/[0.05] transition-all duration-200 active:scale-95"
+              className="hidden sm:inline-flex text-sm font-bold uppercase tracking-wide text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-200"
             >
-              Sign in
+              SIGN IN
             </Link>
-            <Link
-              href="/campus/create"
-              className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full shadow-[0_1px_3px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.45)] transition-all duration-200 active:scale-95"
-            >
-              Get started
-            </Link>
+            <Button>
+              <Link href="/campus/create">CREATE CAMPUS</Link>
+            </Button>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#f0f7ff] to-white pt-24 pb-32 px-6">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#dbeafe_0%,_transparent_60%)]" />
-        <div className="relative max-w-4xl mx-auto text-center">
-          <span className="inline-block bg-blue-50 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100 mb-6">
-            🎓 The all-in-one polytechnic institute management platform
-          </span>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-            Manage your polytechnic.<br />
-            <span className="text-blue-600">The smarter way.</span>
+      {/* ── Hero ───────────────────────────────────────────────────────────── */}
+      <section className="max-w-[95vw] mx-auto px-8 py-32">
+        <div 
+          className="relative"
+          style={{
+            transform: `scale(${1 + scrollY * 0.0002})`,
+            opacity: Math.max(0, 1 - scrollY * 0.002),
+          }}
+        >
+          <div className="mb-8">
+            <span className="inline-block px-4 py-2 border-2 border-[--accent] text-xs font-mono uppercase tracking-widest text-[--accent]">
+              BUILT FOR BANGLADESH POLYTECHNICS
+            </span>
+          </div>
+
+          <h1 className="text-[clamp(3rem,12vw,14rem)] font-bold uppercase leading-[0.8] tracking-tighter mb-12">
+            MANAGE YOUR
+            <br />
+            <span className="text-[--accent]">POLYTECHNIC</span>
+            <br />
+            INSTITUTE
           </h1>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Nexus is built for Bangladesh&apos;s polytechnic institutes — BTEB-aligned result processing, department management, industrial training tracking, and more on one platform.
+
+          <p className="text-xl md:text-2xl text-[--muted-foreground] leading-tight max-w-2xl mb-12">
+            Nexus is the all-in-one management platform built specifically for Bangladesh's polytechnic institutes — BTEB-aligned, department-aware, and designed for how you actually work.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/campus/create"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3.5 rounded-xl transition-colors text-base"
-            >
-              Start for free →
-            </Link>
-            <a
-              href="#features"
-              className="border border-[#e2e8f0] hover:border-blue-300 text-gray-700 font-medium px-8 py-3.5 rounded-xl transition-colors text-base"
-            >
-              See how it works
-            </a>
-          </div>
-          <p className="mt-5 text-sm text-gray-400">BTEB-aligned · No credit card required · Setup in under 5 minutes</p>
-        </div>
 
-        {/* Hero visual */}
-        <div className="relative max-w-4xl mx-auto mt-16">
-          <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-xl overflow-hidden">
-            <div className="bg-gray-50 border-b border-[#e2e8f0] px-4 py-3 flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400" />
-              <div className="w-3 h-3 rounded-full bg-yellow-400" />
-              <div className="w-3 h-3 rounded-full bg-green-400" />
-              <div className="ml-4 flex-1 bg-white rounded border border-[#e2e8f0] h-6 text-xs text-gray-400 flex items-center px-3">
-                app.nexus.io/dashboard
+          <div className="flex flex-wrap gap-4 mb-16">
+            <Button size="large">
+              <Link href="/campus/create">CREATE CAMPUS →</Link>
+            </Button>
+            <Button variant="secondary" size="large">
+              <Link href="#how-it-works">SEE HOW IT WORKS</Link>
+            </Button>
+          </div>
+
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center gap-8 text-sm font-bold uppercase tracking-wide text-[--muted-foreground]">
+            <span>✓ NO CREDIT CARD REQUIRED</span>
+            <span>✓ 14-DAY FREE TRIAL</span>
+            <span>✓ BTEB-COMPLIANT</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats Marquee ─────────────────────────────────────────────────── */}
+      <section className="bg-[--accent] py-12 border-y-2 border-[--accent]">
+        <Marquee speed={80} gradient={false}>
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="flex items-center gap-16 mx-16">
+              <div className="flex items-center gap-4">
+                <span className="text-[8rem] font-bold text-[--accent-foreground] leading-none">120+</span>
+                <span className="text-xl font-bold uppercase tracking-wide text-[--accent-foreground]">INSTITUTES</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-[8rem] font-bold text-[--accent-foreground] leading-none">80K+</span>
+                <span className="text-xl font-bold uppercase tracking-wide text-[--accent-foreground]">STUDENTS</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-[8rem] font-bold text-[--accent-foreground] leading-none">99.9%</span>
+                <span className="text-xl font-bold uppercase tracking-wide text-[--accent-foreground]">UPTIME</span>
               </div>
             </div>
-            <div className="p-6 grid grid-cols-3 gap-4">
-              {[
-                { label: 'Total Students', value: '1,248', change: '+12%', color: 'blue' },
-                { label: 'Attendance Today', value: '94.2%', change: '+2.1%', color: 'green' },
-                { label: 'Pending Fees', value: '৳3,420', change: '-8%', color: 'orange' },
-              ].map((stat) => (
-                <div key={stat.label} className="bg-gray-50 rounded-xl p-4 border border-[#e2e8f0]">
-                  <p className="text-xs text-gray-500 mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-                  <p className={`text-xs mt-1 ${stat.color === 'orange' ? 'text-orange-500' : 'text-green-500'}`}>{stat.change} this month</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+          ))}
+        </Marquee>
       </section>
 
-      {/* Logos */}
-      <section className="py-12 border-y border-[#e2e8f0] bg-gray-50">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="text-sm text-gray-400 mb-8 uppercase tracking-widest font-medium">Trusted by polytechnic institutes across Bangladesh</p>
-          <div className="flex flex-wrap justify-center gap-10 items-center">
-            {['Dhaka Polytechnic Institute', 'Chittagong Polytechnic Institute', 'Rajshahi Polytechnic Institute', 'Khulna Polytechnic Institute', 'Sylhet Polytechnic Institute'].map((name) => (
-              <span key={name} className="text-gray-400 font-semibold text-sm">{name}</span>
-            ))}
-          </div>
+      {/* ── Features ───────────────────────────────────────────────────────── */}
+      <section id="features" className="max-w-[95vw] mx-auto px-8 py-32">
+        <div className="mb-20">
+          <span className="inline-block px-4 py-2 border-2 border-[--accent] text-xs font-mono uppercase tracking-widest text-[--accent] mb-8">
+            FEATURES
+          </span>
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-none tracking-tighter mb-8">
+            EVERYTHING YOUR
+            <br />
+            INSTITUTE NEEDS
+          </h2>
         </div>
-      </section>
 
-      {/* Features */}
-      <section id="features" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Built for Bangladesh Polytechnic Institutes</h2>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">Every feature designed around the BTEB curriculum, polytechnic workflows, and the realities of technical education in Bangladesh.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="p-6 rounded-2xl border border-[#e2e8f0] hover:border-blue-200 hover:shadow-md transition-all group">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-100 transition-colors">
-                  {f.icon}
-                </div>
-                <h3 className="font-semibold text-gray-800 mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-[--border]">
+          {features.map((f, i) => (
+            <div
+              key={f.title}
+              className="group relative bg-[--background] p-12 border-2 border-[--border] hover:bg-[--accent] hover:border-[--accent] transition-all duration-300"
+            >
+              <div className="absolute top-8 right-8 text-[8rem] font-bold text-[--muted] group-hover:text-[--accent-foreground] leading-none opacity-20 transition-colors duration-300">
+                {String(i + 1).padStart(2, '0')}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-20 bg-blue-600 px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-          {[
-            { value: '120+', label: 'Polytechnic Institutes' },
-            { value: '80K+', label: 'Students Enrolled' },
-            { value: '99.9%', label: 'Uptime' },
-            { value: '4.9★', label: 'Avg. Rating' },
-          ].map((s) => (
-            <div key={s.label}>
-              <p className="text-4xl font-bold mb-1">{s.value}</p>
-              <p className="text-blue-200 text-sm">{s.label}</p>
+              <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-tighter mb-4 group-hover:text-[--accent-foreground] transition-colors duration-300 relative z-10">
+                {f.title}
+              </h3>
+              <p className="text-lg text-[--muted-foreground] leading-tight group-hover:text-[--accent-foreground] transition-colors duration-300 relative z-10">
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="py-24 px-6 bg-[#f8fafc]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Trusted by polytechnic institute leaders</h2>
-            <p className="text-gray-500 text-lg">Hear from principals and department heads across Bangladesh who run their polytechnic institutes on Nexus.</p>
+      {/* ── How It Works ───────────────────────────────────────────────────── */}
+      <section id="how-it-works" className="bg-[--muted] border-y-2 border-[--border] py-32">
+        <div className="max-w-[95vw] mx-auto px-8">
+          <div className="mb-20">
+            <span className="inline-block px-4 py-2 border-2 border-[--accent] text-xs font-mono uppercase tracking-widest text-[--accent] mb-8">
+              HOW IT WORKS
+            </span>
+            <h2 className="text-5xl md:text-7xl font-bold uppercase leading-none tracking-tighter">
+              UP AND RUNNING IN
+              <br />
+              <span className="text-[--accent]">FOUR SIMPLE STEPS</span>
+            </h2>
           </div>
-          <TestimonialSlider />
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {steps.map((step) => (
+              <div key={step.number} className="relative">
+                <div className="text-[12rem] font-bold text-[--border] leading-none mb-4">
+                  {step.number}
+                </div>
+                <h3 className="text-2xl font-bold uppercase tracking-tighter mb-4">{step.title}</h3>
+                <p className="text-lg text-[--muted-foreground] leading-tight">{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Simple, transparent pricing</h2>
-            <p className="text-gray-500 text-lg">Affordable plans for every polytechnic institute. Priced in BDT. No hidden charges.</p>
+      {/* ── Testimonials ───────────────────────────────────────────────────── */}
+      <section id="testimonials" className="py-32 overflow-hidden">
+        <div className="max-w-[95vw] mx-auto px-8 mb-20">
+          <span className="inline-block px-4 py-2 border-2 border-[--accent] text-xs font-mono uppercase tracking-widest text-[--accent] mb-8">
+            TESTIMONIALS
+          </span>
+          <h2 className="text-5xl md:text-7xl font-bold uppercase leading-none tracking-tighter">
+            PRINCIPALS AND HODS
+            <br />
+            <span className="text-[--accent]">LOVE NEXUS</span>
+          </h2>
+        </div>
+
+        <Marquee speed={40} gradient={false}>
+          {testimonials.map((t, i) => (
+            <div key={i} className="w-[600px] mx-8 bg-[--card] border-2 border-[--border] p-12">
+              <p className="text-2xl font-bold uppercase tracking-tight leading-tight mb-8">
+                "{t.text}"
+              </p>
+              <div>
+                <p className="text-lg font-bold uppercase tracking-wide">{t.name}</p>
+                <p className="text-sm uppercase tracking-wide text-[--muted-foreground]">{t.role}</p>
+              </div>
+            </div>
+          ))}
+        </Marquee>
+      </section>
+
+      {/* ── Pricing ────────────────────────────────────────────────────────── */}
+      <section id="pricing" className="bg-[--muted] border-y-2 border-[--border] py-32">
+        <div className="max-w-[95vw] mx-auto px-8">
+          <div className="mb-20">
+            <span className="inline-block px-4 py-2 border-2 border-[--accent] text-xs font-mono uppercase tracking-widest text-[--accent] mb-8">
+              PRICING
+            </span>
+            <h2 className="text-5xl md:text-7xl font-bold uppercase leading-none tracking-tighter">
+              SIMPLE, TRANSPARENT
+              <br />
+              <span className="text-[--accent]">PRICING</span>
+            </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 items-start">
+
+          <div className="grid lg:grid-cols-3 gap-px bg-[--border]">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`rounded-2xl p-8 border transition-all ${
-                  plan.highlight
-                    ? 'border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-100 scale-105'
-                    : 'border-[#e2e8f0] bg-white'
+                className={`bg-[--background] p-12 border-2 ${
+                  plan.highlight ? 'border-[--accent] bg-[--accent]' : 'border-[--border]'
                 }`}
               >
-                {plan.highlight && (
-                  <span className="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
-                    Most popular
+                <h3 className={`text-3xl font-bold uppercase tracking-tighter mb-2 ${
+                  plan.highlight ? 'text-[--accent-foreground]' : ''
+                }`}>
+                  {plan.name}
+                </h3>
+                <div className="flex items-end gap-2 mb-8">
+                  <span className={`text-[6rem] font-bold leading-none ${
+                    plan.highlight ? 'text-[--accent-foreground]' : ''
+                  }`}>
+                    {plan.price}
                   </span>
-                )}
-                <h3 className={`font-bold text-xl mb-1 ${plan.highlight ? 'text-white' : 'text-gray-800'}`}>{plan.name}</h3>
-                <p className={`text-sm mb-5 ${plan.highlight ? 'text-blue-100' : 'text-gray-500'}`}>{plan.desc}</p>
-                <div className="flex items-end gap-1 mb-6">
-                  <span className={`text-4xl font-bold ${plan.highlight ? 'text-white' : 'text-gray-900'}`}>{plan.price}</span>
-                  <span className={`text-sm mb-1 ${plan.highlight ? 'text-blue-200' : 'text-gray-400'}`}>{plan.period}</span>
+                  {plan.period && (
+                    <span className={`text-xl font-bold uppercase mb-4 ${
+                      plan.highlight ? 'text-[--accent-foreground]' : 'text-[--muted-foreground]'
+                    }`}>
+                      {plan.period}
+                    </span>
+                  )}
                 </div>
-                <ul className="space-y-3 mb-8">
+
+                <ul className="space-y-4 mb-12">
                   {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-center gap-2 text-sm">
-                      <span className={`text-base ${plan.highlight ? 'text-blue-200' : 'text-blue-600'}`}>✓</span>
-                      <span className={plan.highlight ? 'text-blue-50' : 'text-gray-600'}>{feat}</span>
+                    <li key={feat} className={`flex items-start gap-3 text-lg font-bold uppercase tracking-wide ${
+                      plan.highlight ? 'text-[--accent-foreground]' : ''
+                    }`}>
+                      <span className={plan.highlight ? 'text-[--accent-foreground]' : 'text-[--accent]'}>✓</span>
+                      {feat}
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/campus/create"
-                  className={`block text-center py-3 rounded-xl font-medium text-sm transition-colors ${
-                    plan.highlight
-                      ? 'bg-white text-blue-600 hover:bg-blue-50'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
+
+                <Button variant={plan.highlight ? 'primary' : 'secondary'} size="large" className="w-full">
+                  <Link href="/campus/create">CREATE CAMPUS</Link>
+                </Button>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 px-6 bg-gradient-to-br from-[#f0f7ff] to-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to modernise your polytechnic institute?</h2>
-          <p className="text-gray-500 text-lg mb-8">Join 120+ polytechnic institutes across Bangladesh already running smarter with Nexus.</p>
-          <Link
-            href="/campus/create"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-10 py-4 rounded-xl transition-colors text-base"
-          >
-            Create your campus →
-          </Link>
+      {/* ── Final CTA ──────────────────────────────────────────────────────── */}
+      <section className="py-32">
+        <div className="max-w-[95vw] mx-auto px-8 text-center">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-none tracking-tighter mb-12">
+            READY TO MODERNISE
+            <br />
+            YOUR <span className="text-[--accent]">POLYTECHNIC</span>
+            <br />
+            INSTITUTE?
+          </h2>
+          <p className="text-xl md:text-2xl text-[--muted-foreground] mb-12 max-w-2xl mx-auto">
+            Join 120+ polytechnic institutes already running on Nexus. Start your free 14-day trial — no credit card, no commitment.
+          </p>
+          <Button size="large">
+            <Link href="/campus/create">CREATE CAMPUS →</Link>
+          </Button>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[#e2e8f0] py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-1 select-none">
-            <span className="text-lg font-black tracking-tight text-gray-900 leading-none">nex</span>
-            <span className="text-lg font-black tracking-tight text-blue-600 leading-none">us</span>
-            <span className="ml-0.5 mb-2.5 w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />
-          </Link>
-          <p className="text-sm text-gray-400">© {new Date().getFullYear()} Nexus. All rights reserved.</p>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <Link href="/privacy" className="hover:text-blue-600 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-blue-600 transition-colors">Terms</Link>
+      {/* ── Footer ─────────────────────────────────────────────────────────── */}
+      <footer className="bg-[--background] border-t-2 border-[--border]">
+        <div className="max-w-[95vw] mx-auto px-8 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+            <div className="col-span-2 md:col-span-1">
+              <Link href="/" className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-[--accent] flex items-center justify-center">
+                  <span className="text-2xl font-bold text-[--accent-foreground]">N</span>
+                </div>
+                <span className="text-2xl font-bold uppercase tracking-tighter">NEXUS</span>
+              </Link>
+              <p className="text-sm uppercase tracking-wide text-[--muted-foreground]">
+                THE POLYTECHNIC INSTITUTE MANAGEMENT PLATFORM BUILT FOR BANGLADESH.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-4">PRODUCT</h4>
+              <ul className="space-y-3">
+                {['FEATURES', 'HOW IT WORKS', 'PRICING'].map((item) => (
+                  <li key={item}>
+                    <Link
+                      href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="text-sm uppercase tracking-wide text-[--muted-foreground] hover:text-[--accent] transition-colors duration-200"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-4">COMPANY</h4>
+              <ul className="space-y-3">
+                {['ABOUT', 'BLOG', 'CAREERS'].map((item) => (
+                  <li key={item}>
+                    <Link
+                      href={`/${item.toLowerCase()}`}
+                      className="text-sm uppercase tracking-wide text-[--muted-foreground] hover:text-[--accent] transition-colors duration-200"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-4">LEGAL</h4>
+              <ul className="space-y-3">
+                {['PRIVACY', 'TERMS', 'SECURITY'].map((item) => (
+                  <li key={item}>
+                    <Link
+                      href={`/${item.toLowerCase()}`}
+                      className="text-sm uppercase tracking-wide text-[--muted-foreground] hover:text-[--accent] transition-colors duration-200"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-[--border] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs uppercase tracking-wide text-[--muted-foreground]">
+              © {new Date().getFullYear()} NEXUS TECHNOLOGIES LTD. ALL RIGHTS RESERVED.
+            </p>
+            <p className="text-xs uppercase tracking-wide text-[--muted-foreground]">
+              MADE WITH ♥ FOR BANGLADESH'S POLYTECHNIC EDUCATORS
+            </p>
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
