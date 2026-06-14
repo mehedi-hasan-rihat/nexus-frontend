@@ -18,20 +18,26 @@ const navMap: Record<Role, { href: string; label: string; icon: string }[]> = {
     { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
     { href: '/dashboard/students', label: 'Students', icon: '🎓' },
     { href: '/dashboard/marks', label: 'Results', icon: '📋' },
+    { href: '/dashboard/rooms', label: 'Rooms', icon: '🚪' },
+    { href: '/dashboard/routine', label: 'Routine', icon: '🗓' },
   ],
   HOD: [
     { href: '/dashboard', label: 'Overview', icon: '⊞' },
     { href: '/dashboard/teachers', label: 'Teachers', icon: '👨‍🏫' },
     { href: '/dashboard/students', label: 'Students', icon: '🎓' },
     { href: '/dashboard/marks', label: 'Results', icon: '📋' },
+    { href: '/dashboard/rooms', label: 'Rooms', icon: '🚪' },
+    { href: '/dashboard/routine', label: 'Routine', icon: '🗓' },
   ],
   TEACHER: [
     { href: '/dashboard', label: 'Overview', icon: '⊞' },
     { href: '/dashboard/marks', label: 'Marks', icon: '📋' },
+    { href: '/dashboard/routine', label: 'Routine', icon: '🗓' },
   ],
   STUDENT: [
     { href: '/dashboard', label: 'Overview', icon: '⊞' },
     { href: '/dashboard/marks', label: 'My Results', icon: '📋' },
+    { href: '/dashboard/routine', label: 'Routine', icon: '🗓' },
   ],
 };
 

@@ -122,6 +122,88 @@ export const subjectApi = {
   remove:        (id: string)        => req(`/subjects/${id}`, 'DELETE'),
 };
 
+// ── Rooms ──────────────────────────────────────────────────────────────────
+
+export interface Room {
+  id: string;
+  campusId: string;
+  name: string;
+  capacity: number | null;
+  type: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export const roomApi = {
+  list:       (activeOnly = false) => req(`/rooms${activeOnly ? '?activeOnly=true' : ''}`),
+  create:     (body: { name: string; capacity?: number; type?: string }) => req('/rooms', 'POST', body),
+  bulkCreate: (names: string[]) => req('/rooms/bulk', 'POST', { names }),
+  update:     (id: string, body: Partial<{ name: string; capacity: number; type: string; isActive: boolean }>) => req(`/rooms/${id}`, 'PATCH', body),
+  remove:     (id: string) => req(`/rooms/${id}`, 'DELETE'),
+};
+
+// ── Routine ────────────────────────────────────────────────────────────────
+
+export type Shift = 'MORNING' | 'EVENING';
+
+export interface RoutineSlot {
+  id: string;
+  routineId: string;
+  day: string;
+  timeSlot: string;
+  room: string;
+  subjectId: string;
+  teacherId: string;
+  subject: { id: string; name: string; code: string };
+  teacher: { id: string; user: { name: string } };
+}
+
+export interface Routine {
+  id: string;
+  campusDepartmentId: string;
+  semester: number;
+  section: string;
+  shift: Shift;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+  slots: RoutineSlot[];
+}
+
+export interface GenerateRoutinePayload {
+  campusDepartmentId: string;
+  semester: number;
+  shift: Shift;
+  teachers: { id: string; subjects: string[] }[];
+  /** Room names (labels) to use — comes from the Room DB records */
+  rooms: { room: string }[];
+  sections: { section: string; subjects: { code: string; weekly_classes: number }[] }[];
+  /** Custom days — subset of the 5 weekdays */
+  days?: string[];
+  /** Custom time slots — e.g. ["09:00-09:45", "09:45-10:30"] */
+  timeSlots?: string[];
+}
+
+export const routineApi = {
+  generate: (body: GenerateRoutinePayload) =>
+    req('/routines/generate', 'POST', body),
+  list: (campusDepartmentId: string, params?: { semester?: number; section?: string; shift?: Shift }) => {
+    const qs = new URLSearchParams();
+    if (params?.semester) qs.set('semester', String(params.semester));
+    if (params?.section)  qs.set('section', params.section);
+    if (params?.shift)    qs.set('shift', params.shift);
+    const q = qs.toString();
+    return req(`/routines/${campusDepartmentId}${q ? `?${q}` : ''}`);
+  },
+  getById: (routineId: string) => req(`/routines/detail/${routineId}`),
+  updateSlot: (slotId: string, body: { day?: string; timeSlot?: string; room?: string; subjectId?: string; teacherId?: string }) =>
+    req(`/routines/slots/${slotId}`, 'PATCH', body),
+  publish: (routineId: string, publish: boolean) =>
+    req(`/routines/${routineId}/publish`, 'PATCH', { publish }),
+  delete: (routineId: string) =>
+    req(`/routines/${routineId}`, 'DELETE'),
+};
+
 // ── Marks ──────────────────────────────────────────────────────────────────
 
 export const markApi = {
